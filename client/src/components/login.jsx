@@ -19,7 +19,7 @@ export default function Login() {
   }
 
   return (
-    <div className="login-modal">
+    <div className="login modal">
       <form onSubmit={handleSubmit} method="post">
         <div className="email-input">
           <label htmlFor="">Email</label>

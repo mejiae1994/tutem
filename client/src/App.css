@@ -4,6 +4,10 @@
   text-align: center;
 }
 
+li {
+  list-style-type: none;
+}
+
 /* navbar start */
 nav {
   display: block;
@@ -17,10 +21,6 @@ nav ul {
   gap: 1rem;
 }
 
-nav li {
-  list-style-type: none;
-}
-
 nav li > a {
   text-decoration: none;
   color: whitesmoke;
@@ -28,7 +28,7 @@ nav li > a {
 /* navbar end */
 
 /* login modal start */
-.login-modal {
+.modal {
   position: absolute;
   top: 35%;
   left: 50%;
@@ -42,7 +42,7 @@ nav li > a {
   border-radius: 1rem;
 }
 
-.login-modal > form {
+.modal > form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
