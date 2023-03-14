@@ -4,6 +4,7 @@ const colors = require("colors");
 require("dotenv").config();
 const cors = require("cors");
 const db = require("./config/db");
+const cookieParser = require("cookie-parser");
 const port = process.env.PORT || 3000;
 
 db();
@@ -11,6 +12,7 @@ db();
 const app = express();
 
 //middlewares
+app.use(cookieParser());
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ extended: false }));
 

@@ -1,14 +1,15 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import React from "react";
 
 async function registerUser(formData) {
   try {
     const formJson = Object.fromEntries(formData.entries());
-    const response = await axios.post(
-      "http://localhost:5000/api/users",
+    const { status } = await axios.post(
+      "http://localhost:5000/api/users/register",
       formJson
     );
-    console.log(response.data);
+    return status;
   } catch (error) {
     console.log("request failed");
     console.error(error);
@@ -16,11 +17,14 @@ async function registerUser(formData) {
 }
 
 export default function Register() {
-  function handleSubmit(e) {
+  const navigate = useNavigate();
+
+  async function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    registerUser(formData);
+    const status = await registerUser(formData);
+    if (status === 201) navigate("/dashboard");
     e.target.reset();
   }
 
@@ -30,8 +34,8 @@ export default function Register() {
         <div className="username-input">
           <label htmlFor="">Username</label>
           <input
-            type="name"
-            name="name"
+            type="username"
+            name="username"
             id=""
             placeholder="Enter your username"
           />
