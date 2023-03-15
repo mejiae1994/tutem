@@ -1,16 +1,29 @@
-import React from "react";
+import { React, useContext } from "react";
 import { Link } from "react-router-dom";
+import { LoginContext } from "../App";
 
 export default function NavBar() {
+  const { loggedIn, setLoggedIn } = useContext(LoginContext);
+
   return (
     <nav>
       <ul className="navbar">
         <li>
-          <Link to="/login">Login</Link>
+          {!loggedIn ? (
+            <Link to="/login">Login</Link>
+          ) : (
+            <Link
+              onClick={() => {
+                setLoggedIn(false);
+                localStorage.clear();
+              }}
+              to="/"
+            >
+              Logout
+            </Link>
+          )}
         </li>
-        <li>
-          <Link to="/register">Register</Link>
-        </li>
+        <li>{!loggedIn ? <Link to="/register">Register</Link> : null}</li>
       </ul>
     </nav>
   );

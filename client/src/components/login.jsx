@@ -1,33 +1,65 @@
-import { useState } from "react";
-import React from "react";
+import { useState, useContext, React } from "react";
+import { LoginContext } from "../App";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+async function logUser(formData) {
+  try {
+    const userData = Object.fromEntries(formData.entries());
+    const res = await axios.post(
+      "http://localhost:5000/api/users/login",
+      userData
+    );
+    return res;
+  } catch (error) {
+    console.log("login failed");
+    console.error(error);
+  }
+}
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [userData, setUserData] = useState({
+    username: undefined,
+    password: undefined,
+  });
+  const { setLoggedIn } = useContext(LoginContext);
+  const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
+    //put the code below in a try catch block?
+    const { status, data } = await logUser(formData);
+    if (status === 200) {
+      localStorage.setItem("user", JSON.stringify(data.details));
+      setLoggedIn(true);
+      navigate("/dashboard");
+    }
     setLogin(formData);
+    console.log(status);
   }
 
   function setLogin(formData) {
-    const formJson = Object.fromEntries(formData.entries());
-    setEmail(formJson.email);
-    setPassword(formJson.password);
+    const { username, password } = Object.fromEntries(formData.entries());
+
+    setUserData((prev) => ({
+      ...prev,
+      username: username,
+      password: password,
+    }));
   }
 
   return (
     <div className="login modal">
       <form onSubmit={handleSubmit} method="post">
         <div className="email-input">
-          <label htmlFor="">Email</label>
+          <label htmlFor="">username</label>
           <input
-            type="email"
-            name="email"
+            type="username"
+            name="username"
             id=""
-            placeholder="Enter your email"
+            placeholder="Enter your username"
           />
         </div>
         <div className="password-input">
@@ -40,8 +72,6 @@ export default function Login() {
           />
         </div>
         <button type="submit">Continue</button>
-        <span>{email}</span>
-        <span>{password}</span>
       </form>
     </div>
   );

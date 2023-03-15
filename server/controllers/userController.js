@@ -14,7 +14,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("please add all fields");
   }
 
-  const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ username });
 
   if (userExists) {
     res.status(400);
@@ -46,13 +46,13 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users/login
 // @access  Public
 const loginUser = asyncHandler(async (req, res) => {
-  const { email } = req.body;
+  const { username } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ username });
 
   if (!user) {
     res.status(404);
-    throw new Error("invalid email or user not found");
+    throw new Error("Invalid username or user not found");
   }
 
   const isPasswordValid = await bcrypt.compare(
@@ -70,11 +70,11 @@ const loginUser = asyncHandler(async (req, res) => {
     process.env.JWT_SECRET
   );
 
-  const { password, ...otherDetails } = user._doc;
+  const { password, isAdmin, ...otherDetails } = user._doc;
   res
     .cookie("access_token", token, { httpOnly: true })
     .status(200)
-    .json({ ...otherDetails });
+    .json({ details: { ...otherDetails }, isAdmin });
 });
 
 // @desc    get user
