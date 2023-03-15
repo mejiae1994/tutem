@@ -3,17 +3,12 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const jtw = require("jsonwebtoken");
 
-// router.get("/:id", getUser);
-// router.get("/", getUsers);
-// router.put("/:id", updateUser);
-// router.delete("/:id", deleteUser);
-
 // @desc    Register new user
 // @route   POST /api/users/register
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-  console.log({ username, email, password });
+
   if (!username || !email || !password) {
     res.status(400);
     throw new Error("please add all fields");
@@ -86,9 +81,10 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users/:id
 // @access  Public
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id).select("-password");
 
   if (!user) {
+    res.status(400);
     throw new Error("invalid user Id or user not found");
   }
 
