@@ -9,21 +9,23 @@ export default function NavBar() {
     <nav>
       <ul className="navbar">
         <li>
-          {!loggedIn ? (
+          {loggedIn == null ? (
             <Link to="/login">Login</Link>
           ) : (
             <Link
               onClick={() => {
-                setLoggedIn(false);
+                setLoggedIn(null);
                 localStorage.clear();
               }}
-              to="/"
+              to="/login"
             >
               Logout
             </Link>
           )}
         </li>
-        <li>{!loggedIn ? <Link to="/register">Register</Link> : null}</li>
+        <li>
+          {loggedIn == null ? <Link to="/register">Register</Link> : null}
+        </li>
       </ul>
     </nav>
   );

@@ -20,6 +20,24 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    userPreferences: {
+      interest: {
+        type: String,
+        enum: ["teach", "learn"],
+        default: "learn",
+      },
+      preferredLanguage: {
+        type: String,
+        default: "English",
+      },
+      bio: {
+        type: String,
+        maxlength: 500,
+      },
+      profileImg: {
+        type: String,
+      },
+    },
   },
   {
     timestamps: true,

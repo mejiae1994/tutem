@@ -70,11 +70,11 @@ const loginUser = asyncHandler(async (req, res) => {
     process.env.JWT_SECRET
   );
 
-  const { password, isAdmin, ...otherDetails } = user._doc;
+  const { userPreferences, password, isAdmin, ...otherDetails } = user._doc;
   res
     .cookie("access_token", token, { httpOnly: true })
     .status(200)
-    .json({ details: { ...otherDetails }, isAdmin });
+    .json({ details: { ...otherDetails }, userPreferences, isAdmin });
 });
 
 // @desc    get user
@@ -108,18 +108,21 @@ const getUsers = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/:id
 // @access  Public
 const updateUser = asyncHandler(async (req, res) => {
+  console.log("updating user");
+  console.log(req.body);
   const updatedUser = await User.findByIdAndUpdate(
     req.params.id,
     { $set: req.body },
     { new: true }
   );
 
+  console.log(`${updatedUser}`);
   if (!updatedUser) {
     res.status(400);
     throw new Error("User not found");
   }
 
-  res.status(200).json(updateUser);
+  res.status(200).json(updatedUser);
 });
 
 // @desc    delete user

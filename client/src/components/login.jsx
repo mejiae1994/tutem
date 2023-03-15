@@ -1,20 +1,15 @@
-import { useState, useContext, React } from "react";
-import { LoginContext } from "../App";
+import { useState, React, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../App";
 import axios from "axios";
 
 async function logUser(formData) {
-  try {
-    const userData = Object.fromEntries(formData.entries());
-    const res = await axios.post(
-      "http://localhost:5000/api/users/login",
-      userData
-    );
-    return res;
-  } catch (error) {
-    console.log("login failed");
-    console.error(error);
-  }
+  const userData = Object.fromEntries(formData.entries());
+  const res = await axios.post(
+    "http://localhost:5000/api/users/login",
+    userData
+  );
+  return res;
 }
 
 export default function Login() {
@@ -22,6 +17,7 @@ export default function Login() {
     username: undefined,
     password: undefined,
   });
+  const [error, setError] = useState(null);
   const { setLoggedIn } = useContext(LoginContext);
   const navigate = useNavigate();
 
@@ -30,14 +26,23 @@ export default function Login() {
     const form = e.target;
     const formData = new FormData(form);
     //put the code below in a try catch block?
-    const { status, data } = await logUser(formData);
-    if (status === 200) {
-      localStorage.setItem("user", JSON.stringify(data.details));
-      setLoggedIn(true);
-      navigate("/dashboard");
+
+    try {
+      const { status, data } = await logUser(formData);
+      if (status === 200) {
+        localStorage.setItem("user", JSON.stringify(data.details));
+        setLogin(formData);
+        setError(null);
+      }
+    } catch (error) {
+      if (error.response.status === 404) {
+        setError("Invalid username");
+      } else if (error.response.status === 400) {
+        setError("wrong password");
+      } else {
+        setError(error);
+      }
     }
-    setLogin(formData);
-    console.log(status);
   }
 
   function setLogin(formData) {
@@ -48,7 +53,16 @@ export default function Login() {
       username: username,
       password: password,
     }));
+    const user = localStorage.getItem("user");
+    console.log(user);
+    setLoggedIn(user);
   }
+
+  useEffect(() => {
+    if (userData.username) {
+      navigate("/dashboard", { state: { user: userData.username } });
+    }
+  });
 
   return (
     <div className="login modal">
@@ -72,6 +86,16 @@ export default function Login() {
           />
         </div>
         <button type="submit">Continue</button>
+
+        <span
+          style={{
+            color: "red",
+            fontSize: "1rem",
+            fontWeight: 400,
+          }}
+        >
+          {error}
+        </span>
       </form>
     </div>
   );
