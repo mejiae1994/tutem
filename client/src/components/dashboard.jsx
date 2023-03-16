@@ -1,14 +1,13 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useContext } from "react";
+import UserProfile from "./userProfile";
+import { UserContext } from "../context/UserProvider";
 
 export default function Dashboard() {
-  const location = useLocation();
-
-  console.log(location);
+  const { user } = useContext(UserContext);
   return (
     <div className="dashboard">
       <h1>Dashboard</h1>
-      {location != null ? <h2>Hello {location.state.user}</h2> : "error"}
+      {user != null ? <UserProfile /> : <span>no user logged in</span>}
     </div>
   );
 }

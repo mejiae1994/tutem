@@ -1,20 +1,21 @@
 import { React, useContext } from "react";
 import { Link } from "react-router-dom";
-import { LoginContext } from "../App";
+import { UserContext } from "../context/UserProvider";
 
 export default function NavBar() {
-  const { loggedIn, setLoggedIn } = useContext(LoginContext);
+  const { user, setUser } = useContext(UserContext);
 
+  console.log(user);
   return (
     <nav>
       <ul className="navbar">
         <li>
-          {loggedIn == null ? (
+          {user == null ? (
             <Link to="/login">Login</Link>
           ) : (
             <Link
               onClick={() => {
-                setLoggedIn(null);
+                setUser(null);
                 localStorage.clear();
               }}
               to="/login"
@@ -23,9 +24,7 @@ export default function NavBar() {
             </Link>
           )}
         </li>
-        <li>
-          {loggedIn == null ? <Link to="/register">Register</Link> : null}
-        </li>
+        <li>{user == null ? <Link to="/register">Register</Link> : null}</li>
       </ul>
     </nav>
   );

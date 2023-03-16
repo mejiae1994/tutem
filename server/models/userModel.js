@@ -36,6 +36,8 @@ const userSchema = mongoose.Schema(
       },
       profileImg: {
         type: String,
+        default:
+          "https://static.vecteezy.com/system/resources/thumbnails/002/608/327/small/mobile-application-avatar-web-button-menu-digital-silhouette-style-icon-free-vector.jpg",
       },
     },
   },

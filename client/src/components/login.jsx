@@ -1,6 +1,6 @@
 import { useState, React, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoginContext } from "../App";
+import { UserContext } from "../context/UserProvider";
 import axios from "axios";
 
 async function logUser(formData) {
@@ -9,16 +9,20 @@ async function logUser(formData) {
     "http://localhost:5000/api/users/login",
     userData
   );
+  console.log("before local storage");
+  localStorage.setItem("user", JSON.stringify(res.data.details));
+  console.log("after local storage");
   return res;
 }
 
+//refactor login component on
 export default function Login() {
   const [userData, setUserData] = useState({
     username: undefined,
     password: undefined,
   });
   const [error, setError] = useState(null);
-  const { setLoggedIn } = useContext(LoginContext);
+  const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -30,8 +34,16 @@ export default function Login() {
     try {
       const { status, data } = await logUser(formData);
       if (status === 200) {
-        localStorage.setItem("user", JSON.stringify(data.details));
-        setLogin(formData);
+        console.log("after return and localstorage");
+        const { details, userPreferences } = data;
+        console.log(details, userPreferences);
+        try {
+          setUser(details);
+          console.log("after set user");
+        } catch (error) {
+          console.log(error);
+        }
+        navigate("/");
         setError(null);
       }
     } catch (error) {
@@ -53,16 +65,9 @@ export default function Login() {
       username: username,
       password: password,
     }));
-    const user = localStorage.getItem("user");
-    console.log(user);
-    setLoggedIn(user);
-  }
 
-  useEffect(() => {
-    if (userData.username) {
-      navigate("/dashboard", { state: { user: userData.username } });
-    }
-  });
+    // console.log(`showing the user data from set login: ${user}`);
+  }
 
   return (
     <div className="login modal">
