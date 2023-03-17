@@ -1,26 +1,16 @@
 import { useState, React, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
-import axios from "axios";
+import { axiosRequest } from "../utils/axiosRequest";
 
 async function logUser(formData) {
   const userData = Object.fromEntries(formData.entries());
-  const res = await axios.post(
-    "http://localhost:5000/api/users/login",
-    userData
-  );
-  console.log("before local storage");
-  localStorage.setItem("user", JSON.stringify(res.data.details));
-  console.log("after local storage");
+  const res = await axiosRequest.post("login", userData);
   return res;
 }
 
 //refactor login component on
 export default function Login() {
-  const [userData, setUserData] = useState({
-    username: undefined,
-    password: undefined,
-  });
   const [error, setError] = useState(null);
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -29,22 +19,18 @@ export default function Login() {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    //put the code below in a try catch block?
 
     try {
       const { status, data } = await logUser(formData);
       if (status === 200) {
-        console.log("after return and localstorage");
-        const { details, userPreferences } = data;
-        console.log(details, userPreferences);
         try {
-          setUser(details);
-          console.log("after set user");
+          localStorage.setItem("user", JSON.stringify(data));
+          setUser(data);
+          navigate("/");
+          setError(null);
         } catch (error) {
           console.log(error);
         }
-        navigate("/");
-        setError(null);
       }
     } catch (error) {
       if (error.response.status === 404) {
@@ -55,18 +41,6 @@ export default function Login() {
         setError(error);
       }
     }
-  }
-
-  function setLogin(formData) {
-    const { username, password } = Object.fromEntries(formData.entries());
-
-    setUserData((prev) => ({
-      ...prev,
-      username: username,
-      password: password,
-    }));
-
-    // console.log(`showing the user data from set login: ${user}`);
   }
 
   return (

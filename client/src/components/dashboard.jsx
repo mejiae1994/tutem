@@ -7,7 +7,11 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       <h1>Dashboard</h1>
-      {user != null ? <UserProfile /> : <span>no user logged in</span>}
+      {user != null ? (
+        <UserProfile userData={user} />
+      ) : (
+        <span>no user logged in</span>
+      )}
     </div>
   );
 }

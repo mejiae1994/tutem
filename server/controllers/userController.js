@@ -108,15 +108,18 @@ const getUsers = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/:id
 // @access  Public
 const updateUser = asyncHandler(async (req, res) => {
-  console.log("updating user");
-  console.log(req.body);
+  const userBody = flattenObject(req.body);
+
   const updatedUser = await User.findByIdAndUpdate(
     req.params.id,
-    { $set: req.body },
-    { new: true }
+    {
+      $set: userBody,
+    },
+    {
+      new: true,
+    }
   );
 
-  console.log(`${updatedUser}`);
   if (!updatedUser) {
     res.status(400);
     throw new Error("User not found");
@@ -147,3 +150,28 @@ module.exports = {
   updateUser,
   deleteUser,
 };
+
+function flattenObject(obj) {
+  const result = {};
+
+  function recurse(obj, currentKey) {
+    for (let key in obj) {
+      let value = obj[key];
+
+      if (value == null || value === "") {
+        continue;
+      }
+      let newKey = currentKey ? `${currentKey}.${key}` : key;
+
+      if (typeof value === "object") {
+        recurse(value, newKey);
+      } else {
+        result[newKey] = value;
+      }
+    }
+  }
+
+  recurse(obj, "");
+
+  return result;
+}

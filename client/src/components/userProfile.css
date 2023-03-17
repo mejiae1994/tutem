@@ -18,12 +18,6 @@
   border-radius: 6rem;
 }
 
-.user-profile > h1,
-h2,
-h3 {
-  margin: 0;
-}
-
 .user-profile > p {
   border-top: 1px solid #5a5454;
 }

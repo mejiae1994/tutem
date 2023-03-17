@@ -24,7 +24,7 @@ export default function Register() {
     const form = e.target;
     const formData = new FormData(form);
     const status = await registerUser(formData);
-    if (status === 201) navigate("/");
+    if (status === 201) navigate("/login");
     e.target.reset();
   }
 

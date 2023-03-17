@@ -7,7 +7,6 @@ export default function Home() {
     <div className="home-container">
       <NavBar />
       <Dashboard />
-      {/* {location != null ? <h2>Hello {location.state.user}</h2> : "error"} */}
     </div>
   );
 }
