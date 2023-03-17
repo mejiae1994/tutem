@@ -2,12 +2,7 @@ import { useState, React, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
 import { axiosRequest } from "../utils/axiosRequest";
-
-async function logUser(formData) {
-  const userData = Object.fromEntries(formData.entries());
-  const res = await axiosRequest.post("login", userData);
-  return res;
-}
+import { getFormData } from "../utils/utils";
 
 //refactor login component on
 export default function Login() {
@@ -17,11 +12,10 @@ export default function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
+    const userData = getFormData(e.target);
 
     try {
-      const { status, data } = await logUser(formData);
+      const { status, data } = await axiosRequest.post("login", userData);
       if (status === 200) {
         try {
           localStorage.setItem("user", JSON.stringify(data));
@@ -49,7 +43,7 @@ export default function Login() {
         <div className="email-input">
           <label htmlFor="">username</label>
           <input
-            type="username"
+            type="text"
             name="username"
             id=""
             placeholder="Enter your username"

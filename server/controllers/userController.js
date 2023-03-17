@@ -70,11 +70,8 @@ const loginUser = asyncHandler(async (req, res) => {
     process.env.JWT_SECRET
   );
 
-  const { userPreferences, password, isAdmin, ...otherDetails } = user._doc;
-  res
-    .cookie("access_token", token, { httpOnly: true })
-    .status(200)
-    .json({ details: { ...otherDetails }, userPreferences, isAdmin });
+  const { password, ...data } = user._doc;
+  res.cookie("access_token", token, { httpOnly: true }).status(200).json(data);
 });
 
 // @desc    get user

@@ -1,20 +1,10 @@
-import { React, useState } from "react";
+import { React, useState, useContext } from "react";
 import "./userProfile.css";
-import { getFormData } from "../utils/utils";
+import { UserContext } from "../context/UserProvider";
 import { axiosRequest } from "../utils/axiosRequest";
-// import profile from "../assets/profile.png";
-
-// need to pull data from database and display it here, probably need to use Context
-const dummyData = {
-  username: "edison mejia",
-  interest: "learn",
-  profileImg:
-    "https://thumbs.dreamstime.com/b/little-kid-avatar-profile-picture-boy-glasses-cartoon-character-portrait-isolated-vector-illustration-graphic-design-149134091.jpg",
-  bio: "Greetings, I am a software developer who aims to deepen my understanding of JavaScript.",
-};
 
 export default function UserProfile({ userData }) {
-  const { details, userPreferences } = userData;
+  const { userPreferences, ...details } = userData;
 
   return (
     <>
@@ -34,6 +24,7 @@ export default function UserProfile({ userData }) {
 }
 
 function Preferences() {
+  const { user, setUser } = useContext(UserContext);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -42,29 +33,44 @@ function Preferences() {
       bio: "",
     },
   });
+  const [status, setStatus] = useState("");
 
   //need to nest account for nested properties
   function handleChange(e) {
-    setFormData((previousState) => ({
-      ...previousState,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+
+    if (Object.keys(formData.userPreferences).includes(name)) {
+      setFormData((prevState) => ({
+        ...prevState,
+        userPreferences: {
+          ...prevState.userPreferences,
+          [name]: value,
+        },
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const userData = getFormData(e.target);
-    console.log("logging from inside submit", userData);
 
     try {
-      const res = await axiosRequest.put("64133e5b35f63b524eda156d", userData);
-      console.log(res);
+      const { status, data } = await axiosRequest.put(user._id, formData);
+      localStorage.setItem("user", JSON.stringify(data));
+      setUser(data);
+      setStatus("Changes saved successfully");
     } catch (error) {
       console.log(error);
+      setStatus("Something went wrong");
     }
+
+    e.target.reset();
   }
 
-  console.log(formData);
   return (
     <div className="preference modal">
       <h1>change profile information</h1>
@@ -73,7 +79,7 @@ function Preferences() {
         <div className="username-input">
           <label htmlFor="">Username</label>
           <input
-            type="username"
+            type="text"
             name="username"
             placeholder="enter new username"
             onChange={handleChange}
@@ -104,6 +110,7 @@ function Preferences() {
           ></textarea>
         </div>
         <button type="submit">Save Changes</button>
+        <span>{status && status}</span>
       </form>
     </div>
   );

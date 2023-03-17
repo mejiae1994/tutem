@@ -5,7 +5,6 @@ import { UserContext } from "../context/UserProvider";
 export default function NavBar() {
   const { user, setUser } = useContext(UserContext);
 
-  console.log(`logging user data from navbar ${JSON.stringify(user)}`);
   return (
     <nav>
       <ul className="navbar">
