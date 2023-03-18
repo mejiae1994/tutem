@@ -20,6 +20,8 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    rightSwipe: [String],
+    leftSwipe: [String],
     userPreferences: {
       interest: {
         type: String,

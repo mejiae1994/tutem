@@ -13,10 +13,14 @@ const {
   getUsers,
   updateUser,
   deleteUser,
+  updateUserSwipe,
 } = require("../controllers/userController");
+
+const { createMatches } = require("../controllers/matchController");
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.put("/swipe", checkToken, updateUserSwipe);
 router.get("/:id", checkUser, getUser);
 router.get("/", checkAdmin, getUsers);
 router.put("/:id", checkUser, updateUser);

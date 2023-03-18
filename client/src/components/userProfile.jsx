@@ -35,7 +35,6 @@ function Preferences() {
   });
   const [status, setStatus] = useState("");
 
-  //need to nest account for nested properties
   function handleChange(e) {
     const { name, value } = e.target;
 

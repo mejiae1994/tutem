@@ -105,12 +105,19 @@ const getUsers = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/:id
 // @access  Public
 const updateUser = asyncHandler(async (req, res) => {
-  const userBody = flattenObject(req.body);
+  let requestBody;
+  const { userPreferences } = req.body;
+
+  if (userPreferences) {
+    requestBody = flattenObject(req.body);
+  } else {
+    requestBody = req.body;
+  }
 
   const updatedUser = await User.findByIdAndUpdate(
     req.params.id,
     {
-      $set: userBody,
+      $set: requestBody,
     },
     {
       new: true,
@@ -125,12 +132,30 @@ const updateUser = asyncHandler(async (req, res) => {
   res.status(200).json(updatedUser);
 });
 
+//req.user.id has the id of the person doing the request. user will just update its own rightSwipe array
+const updateUserSwipe = asyncHandler(async (req, res) => {
+  const updatedSwipe = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      $push: { rightSwipe: req.body.rightSwipe },
+    },
+    {
+      new: true,
+    }
+  );
+
+  if (!updatedSwipe) {
+    req.status(400);
+    throw new Error("swipe not updated");
+  }
+
+  res.status(200).json(updatedSwipe);
+});
+
 // @desc    delete user
 // @route   DEL /api/users/:id
 // @access  Public
 const deleteUser = asyncHandler(async (req, res) => {
-  const { username, password, isAdmin } = req.body;
-
   try {
     await User.findByIdAndDelete(req.params.id);
     res.status(200).json("user has been deleted");
@@ -139,15 +164,6 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = {
-  registerUser,
-  loginUser,
-  getUser,
-  getUsers,
-  updateUser,
-  deleteUser,
-};
-
 function flattenObject(obj) {
   const result = {};
 
@@ -155,7 +171,7 @@ function flattenObject(obj) {
     for (let key in obj) {
       let value = obj[key];
 
-      if (value == null || value === "") {
+      if (value === null || value === "") {
         continue;
       }
       let newKey = currentKey ? `${currentKey}.${key}` : key;
@@ -172,3 +188,13 @@ function flattenObject(obj) {
 
   return result;
 }
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+  updateUserSwipe,
+};
