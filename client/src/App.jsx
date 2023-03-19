@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./components/login";
 import Register from "./components/register";
 import Dashboard from "./components/dashboard";
+import NavBar from "./components/navbar";
 import Home from "./components/home";
 import "./App.css";
 
@@ -10,9 +11,12 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-          <Route exact path="/" element={<Home />}></Route>
-          <Route exact path="/login" element={<Login />}></Route>
-          <Route exact path="/register" element={<Register />}></Route>
+          <Route path="/" element={<NavBar />}>
+            <Route path="/home" element={<Home />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/register" element={<Register />}></Route>
+            <Route path="/dashboard" element={<Dashboard />}></Route>
+          </Route>
         </Routes>
       </div>
     </BrowserRouter>

@@ -1,12 +1,8 @@
 import { React } from "react";
-import NavBar from "./navbar";
-import Dashboard from "./dashboard";
-
 export default function Home() {
   return (
     <div className="home-container">
-      <NavBar />
-      <Dashboard />
+      <h1>Testing this is the home-container</h1>
     </div>
   );
 }

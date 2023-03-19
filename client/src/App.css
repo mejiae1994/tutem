@@ -4,27 +4,56 @@
   text-align: center;
 }
 
-li {
-  list-style-type: none;
-}
-
 /* navbar start */
 nav {
   display: block;
+  height: 50px;
   padding-inline: 2rem;
   border-bottom: 1px solid rgb(33, 177, 177);
 }
 
-nav ul {
+.navbar-container {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 1rem;
+  height: 100%;
 }
 
-nav li > a {
-  text-decoration: none;
+.profile-container {
+  display: flex;
+  padding: 6px;
+  border-radius: 5px;
+  border: 0.5px solid orangered;
+}
+
+.profile-container > img {
+  height: 30px;
+  padding-right: 0.5rem;
+}
+
+.profile-container > span {
+  cursor: pointer;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  width: 8rem;
+  position: absolute;
+  top: 7%;
+  right: 19%;
+  border-radius: 5px;
+  background-color: #3e3c3c;
+}
+
+a {
   color: whitesmoke;
 }
+
 /* navbar end */
 
 /* login modal start */
