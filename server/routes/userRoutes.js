@@ -14,6 +14,7 @@ const {
   updateUser,
   deleteUser,
   updateUserSwipe,
+  getFilteredUsers,
 } = require("../controllers/userController");
 
 const { createMatches } = require("../controllers/matchController");
@@ -21,8 +22,9 @@ const { createMatches } = require("../controllers/matchController");
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.put("/swipe", checkToken, updateUserSwipe);
+router.get("/filtered", checkToken, getFilteredUsers);
+router.get("/", checkToken, getUsers);
 router.get("/:id", checkUser, getUser);
-router.get("/", checkAdmin, getUsers);
 router.put("/:id", checkUser, updateUser);
 router.delete("/:id", checkUser, deleteUser);
 

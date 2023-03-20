@@ -101,6 +101,34 @@ const getUsers = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
+// @desc    get users
+// @route   GET /api/users/filtered
+// @access  Public
+const getFilteredUsers = asyncHandler(async (req, res) => {
+  const { rightSwipe, leftSwipe } = await User.findById(req.user.id).select(
+    "rightSwipe leftSwipe"
+  );
+
+  const joinedSwipes = rightSwipe.concat(leftSwipe).concat(req.user.id);
+
+  let swipeSet = new Set();
+  //push to set to remove duplicates
+  joinedSwipes.forEach((swipe) => {
+    swipeSet.add(swipe.toString());
+  });
+  //convert back to array to use as filter
+  let swipesArray = Array.from(swipeSet);
+
+  console.log(swipesArray);
+  //filter users
+  const users = await User.find({ _id: { $nin: swipesArray } });
+  if (!users) {
+    throw new Error("no users found");
+  }
+
+  res.status(200).json(users);
+});
+
 // @desc    update user
 // @route   PUT /api/users/:id
 // @access  Public
@@ -132,12 +160,15 @@ const updateUser = asyncHandler(async (req, res) => {
   res.status(200).json(updatedUser);
 });
 
+// @desc    update userSwipe
+// @route   PUT /api/users/swipe
+// @access  Public
 //req.user.id has the id of the person doing the request. user will just update its own rightSwipe array
 const updateUserSwipe = asyncHandler(async (req, res) => {
   const updatedSwipe = await User.findByIdAndUpdate(
     req.user.id,
     {
-      $push: { rightSwipe: req.body.rightSwipe },
+      $push: { rightSwipe: req.body.rightSwipe, leftSwipe: req.body.leftSwipe },
     },
     {
       new: true,
@@ -197,4 +228,5 @@ module.exports = {
   updateUser,
   deleteUser,
   updateUserSwipe,
+  getFilteredUsers,
 };

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+//might need to add  for swipes [{ type : ObjectId, ref: 'User' }]
 const userSchema = mongoose.Schema(
   {
     username: {
@@ -20,8 +21,8 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    rightSwipe: [String],
-    leftSwipe: [String],
+    rightSwipe: [{ type: mongoose.ObjectId, ref: "User" }],
+    leftSwipe: [{ type: mongoose.ObjectId, ref: "User" }],
     userPreferences: {
       interest: {
         type: String,

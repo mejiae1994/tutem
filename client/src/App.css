@@ -100,11 +100,73 @@ form > div > label {
   transform: translate(-50%, 0);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+:where(h1, h2, h3, h4, h5, h6) {
   margin: 0;
 }
+
+/* Home Start*/
+
+.swipe-container {
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
+  font-weight: 500;
+  color: rgb(2, 2, 2);
+}
+
+.user-card > img {
+  height: 400px;
+  width: 300px;
+  object-fit: cover;
+}
+
+.user-card > span {
+  position: absolute;
+  top: 0;
+  left: 22%;
+}
+
+.user-card > p {
+  position: absolute;
+  bottom: 5px;
+  left: 20%;
+}
+
+button {
+  border-radius: 5px;
+  width: 6rem;
+  border: none;
+  outline: none;
+  margin: 0.2rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.right {
+  position: absolute;
+  top: 50%;
+  background-color: rgb(12, 121, 12);
+  right: 0%;
+}
+
+.left {
+  position: absolute;
+  top: 50%;
+  background-color: rgb(211, 21, 21);
+  left: 0%;
+}
+
+/* Home end */
