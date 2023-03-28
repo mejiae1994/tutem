@@ -2,42 +2,60 @@ const asyncHandler = require("express-async-handler");
 const Match = require("../models/matchModel");
 const User = require("../models/userModel");
 
-const createMatches = asyncHandler(async (req, res) => {
+const upsertMatches = asyncHandler(async (req, res) => {
   //grab all users Id and rightswipe
-  const { users } = await User.find({}, "_id rightSwipe");
+  const users = await User.find({}, "_id rightSwipe");
 
   if (!users) {
     throw new Error("no users found");
   }
-  //return array cotaining objects
-  const matches = findPotentialMatch(users);
 
-  matches.forEach((match) => {
-    console.log(Object.entries(match));
-  });
-
-  const match = await Match.create({
-    userId: email,
-    password: hashedPassword,
-  });
-
-  if (match) {
-    res.status(201).json({
-      _id: user.id,
-      username: user.username,
-      email: user.email,
-    });
-  } else {
-    res.status(400);
-    throw new Error("Invalid user data");
+  const userMatches = findPotentialMatch(users);
+  if (userMatches.length < 1) {
+    console.log("no matches at this time");
+    return;
   }
+  // console.log("logging the matches found", matches);
+
+  const flattenedMatches = createUserMatchMap(userMatches);
+
+  const userBulkWriteArray = Array.from(flattenedMatches, ([key, value]) => {
+    return {
+      updateOne: {
+        filter: { userId: key },
+        update: { $addToSet: { matches: value } },
+        upsert: true,
+      },
+    };
+  });
+
+  const matches = await Match.bulkWrite(userBulkWriteArray);
+  console.log(matches);
 });
 
-//two pointer findpotentialmatch
+//getMatches
+const getMatches = asyncHandler(async (req, res) => {
+  console.log("getting all matches");
+});
+
+//getMatch
+const getMatch = asyncHandler(async (req, res) => {
+  const match = await Match.find({ userId: req.params.id });
+
+  if (match.length < 1) {
+    res.status(204).json(match);
+    console.log("no matches found for this user");
+    return;
+  }
+
+  const [matchObj] = match;
+  res.status(200).json(matchObj);
+});
+
 function findPotentialMatch(userCollection) {
   let matches = [];
-  let i = 0; // Pointer for the first user
-  let j = 1; // Pointer for the second user
+  let i = 0;
+  let j = 1;
 
   while (j < userCollection.length) {
     let swipeArr = userCollection[i];
@@ -50,7 +68,6 @@ function findPotentialMatch(userCollection) {
       );
     }
 
-    // Move the pointers
     if (j === userCollection.length - 1) {
       i++;
       j = i + 1;
@@ -67,4 +84,20 @@ function findMatches(obj, obj2) {
     : false;
 }
 
-module.exports = { createMatches };
+// Define the function to add an element to the hashmap
+//continue working on this function to construct an array of Id objects that have an array containing Ids of all the matches
+function createUserMatchMap(matchesArray) {
+  let map = new Map();
+  matchesArray.forEach((key, value) => {
+    const [user, swipe] = Object.entries(key)[0];
+    if (map.get(user)) {
+      map.get(user).push(swipe);
+    } else {
+      map.set(user, [swipe]);
+    }
+  });
+
+  return map;
+}
+
+module.exports = { upsertMatches, getMatch, getMatches };

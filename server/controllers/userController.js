@@ -110,16 +110,10 @@ const getFilteredUsers = asyncHandler(async (req, res) => {
   );
 
   const joinedSwipes = rightSwipe.concat(leftSwipe).concat(req.user.id);
+  let swipeSet = new Set(joinedSwipes);
 
-  let swipeSet = new Set();
-  //push to set to remove duplicates
-  joinedSwipes.forEach((swipe) => {
-    swipeSet.add(swipe.toString());
-  });
   //convert back to array to use as filter
   let swipesArray = Array.from(swipeSet);
-
-  console.log(swipesArray);
   //filter users
   const users = await User.find({ _id: { $nin: swipesArray } });
   if (!users) {

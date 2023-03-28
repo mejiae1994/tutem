@@ -24,6 +24,7 @@ export default function SwipeList() {
       if (status === 200) {
         setSwipe({});
       }
+      //make sure to fetch the latest after every batch is cleared
       // fetchUsers();
     }
   }, [swipe]);
