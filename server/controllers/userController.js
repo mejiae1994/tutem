@@ -105,17 +105,20 @@ const getUsers = asyncHandler(async (req, res) => {
 // @route   GET /api/users/filtered
 // @access  Public
 const getFilteredUsers = asyncHandler(async (req, res) => {
-  const { rightSwipe, leftSwipe } = await User.findById(req.user.id).select(
-    "rightSwipe leftSwipe"
-  );
+  const { rightSwipe, leftSwipe, userPreferences } = await User.findById(
+    req.user.id
+  ).select("rightSwipe leftSwipe userPreferences");
 
-  const joinedSwipes = rightSwipe.concat(leftSwipe).concat(req.user.id);
+  const joinedSwipes = [...rightSwipe, ...leftSwipe, req.user.id];
   let swipeSet = new Set(joinedSwipes);
 
   //convert back to array to use as filter
   let swipesArray = Array.from(swipeSet);
   //filter users
-  const users = await User.find({ _id: { $nin: swipesArray } });
+  const users = await User.find({ _id: { $nin: swipesArray } })
+    .where("userPreferences.interest")
+    .ne(userPreferences.interest);
+
   if (!users) {
     throw new Error("no users found");
   }

@@ -35,7 +35,13 @@ const upsertMatches = asyncHandler(async (req, res) => {
 
 //getMatches
 const getMatches = asyncHandler(async (req, res) => {
-  console.log("getting all matches");
+  const matches = await Match.find();
+
+  if (!matches) {
+    throw new Error("no matches found");
+  }
+
+  res.status(200).json(matches);
 });
 
 //getMatch

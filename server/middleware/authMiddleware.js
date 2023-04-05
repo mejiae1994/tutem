@@ -26,7 +26,7 @@ const checkUser = asyncHandler(async (req, res, next) => {
   checkToken(req, res, next);
 
   if (!(req.user.id === req.params.id || req.user.isAdmin)) {
-    res.status(403).send("not allowed to request resource");
+    res.status(403);
     throw new Error("not allowed to request user");
   }
 });

@@ -9,7 +9,7 @@ const {
 
 const { getMatch, getMatches } = require("../controllers/matchController");
 
+router.get("/", checkToken, getMatches);
 router.get("/:id", checkUser, getMatch);
-router.post("/", getMatches);
 
 module.exports = router;
