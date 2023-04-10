@@ -58,7 +58,10 @@ function Preferences() {
     e.preventDefault();
 
     try {
-      const { status, data } = await axiosRequest.put(user._id, formData);
+      const { status, data } = await axiosRequest.put(
+        `users/${user._id}`,
+        formData
+      );
       localStorage.setItem("user", JSON.stringify(data));
       setUser(data);
       setStatus("Changes saved successfully");

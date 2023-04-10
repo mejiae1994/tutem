@@ -15,9 +15,9 @@ export default function SwipeList() {
   useEffect(() => {
     let swipes = 0;
     for (let s in swipe) {
-      console.log(swipe[s].length);
       swipes += swipe[s].length;
     }
+
     if (swipes > 1) {
       console.log("swipe batching is done, need to send request");
       let status = postSwipe();
@@ -31,7 +31,7 @@ export default function SwipeList() {
 
   async function fetchUsers() {
     try {
-      const { data } = await axiosRequest.get("filtered");
+      const { data } = await axiosRequest.get("users/filtered");
       setUserList(data);
     } catch (error) {
       console.log(error);
@@ -40,7 +40,7 @@ export default function SwipeList() {
 
   async function postSwipe() {
     try {
-      const { status } = await axiosRequest.put("swipe", swipe);
+      const { status } = await axiosRequest.put("users/swipe", swipe);
       return status;
     } catch (error) {
       console.log(error);

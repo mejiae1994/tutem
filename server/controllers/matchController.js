@@ -53,9 +53,10 @@ const getMatch = asyncHandler(async (req, res) => {
     console.log("no matches found for this user");
     return;
   }
-
   const [matchObj] = match;
-  res.status(200).json(matchObj);
+  const users = await User.find({ _id: { $in: matchObj.matches } });
+
+  res.status(200).json(users);
 });
 
 function findPotentialMatch(userCollection) {

@@ -15,7 +15,7 @@ export default function Login() {
     const userData = getFormData(e.target);
 
     try {
-      const { status, data } = await axiosRequest.post("login", userData);
+      const { status, data } = await axiosRequest.post("users/login", userData);
       if (status === 200) {
         try {
           localStorage.setItem("user", JSON.stringify(data));

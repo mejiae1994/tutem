@@ -45,7 +45,6 @@ nav {
   width: 8rem;
   position: absolute;
   top: 7%;
-  right: 19%;
   border-radius: 5px;
   background-color: #3e3c3c;
 }
@@ -174,6 +173,11 @@ button {
 /* Messaging  */
 
 .messaging-container {
+  background-color: #3e3c3c;
+  border-radius: 0.4rem;
+}
+
+.conversation-container {
   position: fixed;
   bottom: 0;
   right: 0;
@@ -192,6 +196,14 @@ button {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+  background-color: rgb(81, 76, 77);
+}
+
+.conversation-list {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
   width: 400px;
   min-height: 500px;
   max-height: 500px;
@@ -200,6 +212,26 @@ button {
 
 .message-item {
   border-bottom: 1px solid orangered;
+}
+
+.conversation-item {
+  padding-inline: 0.8rem;
+  height: 3rem;
+  cursor: pointer;
+  border-bottom: 1px solid orangered;
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr 2fr;
+  place-items: center;
+}
+
+.conversation-item:hover {
+  transform: scale(1.05);
+}
+
+.conversation-item img {
+  height: 40px;
+  border-radius: 1.2rem;
 }
 
 .submit-area {
@@ -213,7 +245,7 @@ button {
   height: 80px;
 }
 
-.message-modal {
+.messaging-modal {
   position: fixed;
   margin-inline: 0.4rem;
   bottom: 0;

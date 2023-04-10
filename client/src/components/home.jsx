@@ -1,12 +1,12 @@
 import React from "react";
 import SwipeList from "./swipeList";
-import Messaging from "./messaging";
+import ConversationList from "./conversationList";
 
 export default function Home() {
   return (
     <div className="home-container">
       <SwipeList />
-      <Messaging />
+      <ConversationList />
     </div>
   );
 }
