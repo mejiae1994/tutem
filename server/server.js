@@ -21,7 +21,9 @@ app.use(express.json({ extended: false }));
 //routes
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/matches", require("./routes/matchRoutes"));
+app.use("/api/messages", require("./routes/messageRoutes"));
 
+//jobs
 let task = cron.schedule("*/1 * * * *", upsertMatches);
 task.start();
 

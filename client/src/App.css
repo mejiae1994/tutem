@@ -189,7 +189,9 @@ button {
 .collapse-modal {
   display: flex;
   justify-content: center;
+  align-items: center;
   cursor: pointer;
+  height: 2rem;
 }
 
 .message-list {
