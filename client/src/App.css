@@ -173,6 +173,7 @@ button {
 /* Messaging  */
 
 .messaging-container {
+  margin-top: 2rem;
   background-color: #3e3c3c;
   border-radius: 0.4rem;
 }
@@ -195,6 +196,7 @@ button {
 }
 
 .message-list {
+  height: 70vh;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
@@ -212,8 +214,25 @@ button {
   background-color: rgb(81, 76, 77);
 }
 
-.message-item {
-  border-bottom: 1px solid orangered;
+.message-content {
+  display: flex;
+  flex-direction: column;
+  padding-inline: 2rem;
+  width: 0 auto;
+}
+
+.message-content p {
+  background-color: #3e3c3c;
+  margin: 0;
+  margin-bottom: 0.4rem;
+  padding: 1rem;
+  border-radius: 0.4rem;
+  align-self: flex-start;
+}
+
+.owner p {
+  background-color: rgb(30, 116, 99);
+  align-self: flex-end;
 }
 
 .conversation-item {

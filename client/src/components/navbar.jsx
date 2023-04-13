@@ -25,7 +25,6 @@ export default function NavBar() {
                 <div className="options">
                   <Link to="/home">Home</Link>
                   <Link to="/dashboard">Dashboard</Link>
-                  <Link to="/message">Messaging</Link>
                   <Link
                     onClick={() => {
                       setUser(null);

@@ -35,9 +35,7 @@ export default function ConversationList() {
     }
   }
 
-  function handleConversation(e, key) {
-    console.log(key);
-    navigate(`/message`, { state: { id: key } });
+  function handleConversation(e) {
     setIsMessagingOpen(!isMessagingOpen);
   }
 
@@ -47,18 +45,19 @@ export default function ConversationList() {
         collapse
       </div>
       <div className="conversation-list">
-        {conversationList.map((item, key) => {
+        {conversationList.map((item) => {
           return (
-            <div
-              onClick={(e) => handleConversation(e, key)}
-              className="conversation-item"
-              key={key}
-              ref={messageRef}
-            >
-              <img src={item.userPreferences.profileImg} alt="match icon" />
-              <span>{item.email}: </span>
-              {/* <p>{item.messageContent.substring(0, 50)}</p> */}
-            </div>
+            <Link key={item._id} to={`/message/${item._id}`}>
+              <div
+                onClick={(e) => handleConversation(e)}
+                className="conversation-item"
+                ref={messageRef}
+              >
+                <img src={item.userPreferences.profileImg} alt="match icon" />
+                <span>{item.email}: </span>
+                {/* <p>{item.messageContent.substring(0, 50)}</p> */}
+              </div>
+            </Link>
           );
         })}
       </div>
