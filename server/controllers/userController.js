@@ -95,13 +95,14 @@ const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find();
 
   if (!users) {
+    res.status(400);
     throw new Error("no users found");
   }
 
   res.status(200).json(users);
 });
 
-// @desc    get users
+// @desc    get filtered users
 // @route   GET /api/users/filtered
 // @access  Public
 const getFilteredUsers = asyncHandler(async (req, res) => {
@@ -120,7 +121,8 @@ const getFilteredUsers = asyncHandler(async (req, res) => {
     .ne(userPreferences.interest);
 
   if (!users) {
-    throw new Error("no users found");
+    res.status(204);
+    throw new Error("no users found at this time");
   }
 
   res.status(200).json(users);
@@ -188,6 +190,7 @@ const deleteUser = asyncHandler(async (req, res) => {
     await User.findByIdAndDelete(req.params.id);
     res.status(200).json("user has been deleted");
   } catch (error) {
+    res.status(204);
     throw new Error(error);
   }
 });

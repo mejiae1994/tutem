@@ -55,26 +55,12 @@ export default function Message() {
     scrollToBottom();
   }, [messageList]);
 
-  // useEffect(() => {
-  //   fetchMessages();
-  // }, []);
-
-  // async function fetchMessages() {
-  //   try {
-  //     const { data } = await axiosRequest.get(`messages/${location.state.id}`);
-  //     setMessageList(data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
   async function createMessage() {
     try {
       const response = await axiosRequest.post(`messages`, {
         recipient: id,
         messageContent: message,
       });
-      // setMessageList([...messageList, response.data]);
     } catch (error) {
       console.log(error);
     }

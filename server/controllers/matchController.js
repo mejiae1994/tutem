@@ -49,8 +49,8 @@ const getMatch = asyncHandler(async (req, res) => {
   const match = await Match.find({ userId: req.params.id });
 
   if (match.length < 1) {
-    res.status(204).json(match);
     console.log("no matches found for this user");
+    res.status(204).json("no matches found at this time");
     return;
   }
 

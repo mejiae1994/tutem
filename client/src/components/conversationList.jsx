@@ -1,5 +1,5 @@
 import { React, useState, useRef, useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
 import { axiosRequest } from "../utils/axiosRequest";
 
@@ -8,7 +8,6 @@ export default function ConversationList() {
   const [conversationList, setConversationList] = useState([]);
   const [isMessagingOpen, setIsMessagingOpen] = useState(false);
   const messageRef = useRef(null);
-  const navigate = useNavigate();
 
   function handleModal() {
     setIsMessagingOpen(!isMessagingOpen);
@@ -45,26 +44,29 @@ export default function ConversationList() {
         collapse
       </div>
       <div className="conversation-list">
-        {conversationList.map((item) => {
-          return (
-            <Link key={item._id} to={`/message/${item._id}`}>
-              <div
-                onClick={(e) => handleConversation(e)}
-                className="conversation-item"
-                ref={messageRef}
-              >
-                <img src={item.userPreferences.profileImg} alt="match icon" />
-                <span>{item.email}: </span>
-                {/* <p>{item.messageContent.substring(0, 50)}</p> */}
-              </div>
-            </Link>
-          );
-        })}
+        {conversationList ? (
+          conversationList.map((item) => {
+            return (
+              <Link key={item._id} to={`/message/${item._id}`}>
+                <div
+                  onClick={(e) => handleConversation(e)}
+                  className="conversation-item"
+                  ref={messageRef}
+                >
+                  <img src={item.userPreferences.profileImg} alt="match icon" />
+                  <span>{item.email}: </span>
+                </div>
+              </Link>
+            );
+          })
+        ) : (
+          <div>There are no matches</div>
+        )}
       </div>
     </div>
   ) : (
     <div onClick={handleModal} className="messaging-modal">
-      Expand Message list
+      Expand Message List
     </div>
   );
 }

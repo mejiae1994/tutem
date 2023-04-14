@@ -1,5 +1,8 @@
 import { React, useEffect, useState } from "react";
 import { axiosRequest } from "../utils/axiosRequest";
+import thumbupImg from "../assets/up-50.png";
+import thumbdownImg from "../assets/down-50.png";
+import ReactCardFlip from "react-card-flip";
 
 export default function SwipeList() {
   const [userList, setUserList] = useState([]);
@@ -7,6 +10,7 @@ export default function SwipeList() {
     rightSwipe: [],
     leftSwipe: [],
   });
+  const [flipList, setFlipList] = useState([]);
 
   useEffect(() => {
     fetchUsers();
@@ -33,6 +37,7 @@ export default function SwipeList() {
     try {
       const { data } = await axiosRequest.get("users/filtered");
       setUserList(data);
+      setFlipList(new Array(data.length).fill(0));
     } catch (error) {
       console.log(error);
     }
@@ -59,10 +64,19 @@ export default function SwipeList() {
     e.preventDefault();
     const swipedUser = userList[key];
     console.log(swipedUser);
-    const { name } = e.target;
+    const { name } = e.currentTarget;
     setSwipe({ ...swipe, [name]: [...swipe[name], swipedUser] });
     removeFromList(key);
   }
+
+  function handleFlip(e, key) {
+    let newArray = flipList.slice();
+    newArray[key] = Number(!newArray[key]);
+    setFlipList(newArray);
+  }
+
+  console.log(flipList);
+
   return (
     <div className="swipe-container">
       <h1>List of Available users</h1>
@@ -70,23 +84,38 @@ export default function SwipeList() {
         userList.map((user, key) => {
           return (
             <div className="user-card" key={key}>
-              <span>{user.username}</span>
-              <img src={user.userPreferences.profileImg} alt="profile image" />
-              <p>{user.userPreferences.bio}</p>
-              <button
-                name="rightSwipe"
-                className="right"
-                onClick={(e) => handleClick(e, key)}
-              >
-                Swipe Right
-              </button>
-              <button
-                name="leftSwipe"
-                className="left"
-                onClick={(e) => handleClick(e, key)}
-              >
-                Swipe Left
-              </button>
+              <ReactCardFlip isFlipped={flipList[key]}>
+                <img
+                  className="swipe-profile-img"
+                  onMouseOver={(e) => handleFlip(e, key)}
+                  src={user.userPreferences.profileImg}
+                  alt="profile image"
+                />
+
+                <div
+                  className="user-content"
+                  onMouseLeave={(e) => handleFlip(e, key)}
+                >
+                  <h1>{user.username}</h1>
+                  <p>{user.userPreferences.bio}</p>
+                </div>
+              </ReactCardFlip>
+              <div className="swipes">
+                <a
+                  name="leftSwipe"
+                  className="left"
+                  onClick={(e) => handleClick(e, key)}
+                >
+                  <img src={thumbdownImg} alt="thumbs down" />
+                </a>
+                <a
+                  name="rightSwipe"
+                  className="right"
+                  onClick={(e) => handleClick(e, key)}
+                >
+                  <img src={thumbupImg} alt="thumbs up" />
+                </a>
+              </div>
             </div>
           );
         })}

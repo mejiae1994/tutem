@@ -1,7 +1,6 @@
 import { React, useContext, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
-import myImage from "../assets/profile2.jpg";
 
 export default function NavBar() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -18,7 +17,10 @@ export default function NavBar() {
           {user ? (
             <div className="user" onClick={() => handleModal(!modalOpen)}>
               <div className="profile-container">
-                <img src={myImage} alt="profile-image" />
+                <img
+                  src={user.userPreferences.profileImg}
+                  alt="profile-image"
+                />
                 <span>{user?.username}</span>
               </div>
               {modalOpen && (

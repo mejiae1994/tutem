@@ -4,18 +4,33 @@
   left: 50%;
   transform: translate(-50%, 0);
   width: 400px;
-  background-color: #282727;
+  background-color: var(--secondary-color);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.user-profile > img {
+.user-profile img {
   margin-top: 1rem;
   width: 150px;
   height: 150px;
-  object-fit: fill;
+  object-fit: cover;
   border-radius: 6rem;
+}
+
+.user-profile input {
+  position: absolute;
+  margin-top: 1rem;
+  width: 150px;
+  height: 150px;
+  border-radius: 6rem;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.user-profile img:hover {
+  cursor: pointer;
+  opacity: 0.7;
 }
 
 .user-profile > p {

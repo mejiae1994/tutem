@@ -2,13 +2,58 @@ import { React, useState, useContext } from "react";
 import "./userProfile.css";
 import { UserContext } from "../context/UserProvider";
 import { axiosRequest } from "../utils/axiosRequest";
+import axios from "axios";
 
 export default function UserProfile({ userData }) {
   const { userPreferences, ...details } = userData;
+  const { user, setUser } = useContext(UserContext);
+
+  function handleFile(e) {
+    console.log(e.target.files[0]);
+    uploadFile(e.target.files[0]);
+  }
+
+  async function uploadFile(image) {
+    console.log("about to upload file");
+
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "tutem2023");
+    try {
+      const uploadRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/dkx7krtsv/image/upload",
+        data
+      );
+
+      const { url } = uploadRes.data;
+
+      const postUrl = {
+        userPreferences: {
+          profileImg: url,
+        },
+      };
+
+      try {
+        const { status, data } = await axiosRequest.put(
+          `users/${user._id}`,
+          postUrl
+        );
+        localStorage.setItem("user", JSON.stringify(data));
+        setUser(data);
+        console.log("image change success");
+      } catch (error) {
+        console.log(error);
+        setStatus("Something went wrong");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
       <div className="user-profile">
+        <input type="file" onChange={handleFile}></input>
         <img
           className="user-img"
           src={userPreferences.profileImg}
