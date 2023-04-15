@@ -1,40 +1,37 @@
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import React from "react";
-
-async function registerUser(formData) {
-  try {
-    const formJson = Object.fromEntries(formData.entries());
-    const { status } = await axios.post(
-      "http://localhost:5000/api/users/register",
-      formJson
-    );
-    return status;
-  } catch (error) {
-    console.log("request failed");
-    console.error(error);
-  }
-}
+import { axiosRequest } from "../utils/axiosRequest";
+import { React, useState } from "react";
+import { getFormData } from "../utils/utils";
 
 export default function Register() {
-  const navigate = useNavigate();
+  const [sucess, setSucess] = useState("");
+  const [error, setError] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const status = await registerUser(formData);
-    if (status === 201) navigate("/");
+    const userData = getFormData(e.target);
+    const response = await registerUser(userData);
+    if (response?.status === 201) {
+      setSucess("Sucessfull Registration!");
+    }
     e.target.reset();
+  }
+
+  async function registerUser(formData) {
+    try {
+      const response = await axiosRequest.post("users/register", formData);
+      return response;
+    } catch (error) {
+      setError(error.response.data.message);
+    }
   }
 
   return (
     <div className="register modal">
       <form onSubmit={handleSubmit} method="post">
-        <div className="username-input">
+        <div className="user-input">
           <label htmlFor="">Username</label>
           <input
-            type="username"
+            type="text"
             name="username"
             id=""
             placeholder="Enter your username"
@@ -60,6 +57,26 @@ export default function Register() {
         </div>
         <button type="submit">Register</button>
       </form>
+      {sucess && (
+        <div
+          style={{
+            color: "green",
+            margin: "1rem",
+          }}
+        >
+          {sucess}
+        </div>
+      )}
+      {error && (
+        <div
+          style={{
+            color: "red",
+            margin: "1rem",
+          }}
+        >
+          {error}
+        </div>
+      )}
     </div>
   );
 }

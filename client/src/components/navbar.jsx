@@ -1,13 +1,26 @@
 import { React, useContext, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
+import { axiosRequest } from "../utils/axiosRequest";
 
 export default function NavBar() {
   const [modalOpen, setModalOpen] = useState(false);
   const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   function handleModal(open) {
     setModalOpen(open);
+  }
+
+  async function handleLogout() {
+    try {
+      const response = await axiosRequest.post("users/logout");
+      localStorage.setItem("user", null);
+      setUser(null);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -27,15 +40,7 @@ export default function NavBar() {
                 <div className="options">
                   <Link to="/home">Home</Link>
                   <Link to="/dashboard">Dashboard</Link>
-                  <Link
-                    onClick={() => {
-                      setUser(null);
-                      localStorage.setItem("user", null);
-                    }}
-                    to="/"
-                  >
-                    Logout
-                  </Link>
+                  <Link onClick={handleLogout}>Logout</Link>
                 </div>
               )}
             </div>

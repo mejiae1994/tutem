@@ -11,7 +11,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (!username || !email || !password) {
     res.status(400);
-    throw new Error("please add all fields");
+    throw new Error("Please add all fields");
   }
 
   const userExists = await User.findOne({ username });
@@ -72,6 +72,19 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const { password, ...data } = user._doc;
   res.cookie("access_token", token, { httpOnly: true }).status(200).json(data);
+});
+
+// @desc    logout user
+// @route   POST /api/users/logout
+// @access  Public
+const logoutUser = asyncHandler(async (req, res) => {
+  res
+    .clearCookie("access_token", {
+      sameSite: "none",
+      secure: true,
+    })
+    .status(200)
+    .send("User has been logged out.");
 });
 
 // @desc    get user
@@ -223,6 +236,7 @@ function flattenObject(obj) {
 module.exports = {
   registerUser,
   loginUser,
+  logoutUser,
   getUser,
   getUsers,
   updateUser,

@@ -9,6 +9,7 @@ const {
 const {
   registerUser,
   loginUser,
+  logoutUser,
   getUser,
   getUsers,
   updateUser,
@@ -17,10 +18,9 @@ const {
   getFilteredUsers,
 } = require("../controllers/userController");
 
-const { createMatches } = require("../controllers/matchController");
-
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.post("/logout", logoutUser);
 router.put("/swipe", checkToken, updateUserSwipe);
 router.get("/filtered", checkToken, getFilteredUsers);
 router.get("/", checkToken, getUsers);

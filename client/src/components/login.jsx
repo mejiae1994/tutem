@@ -40,7 +40,7 @@ export default function Login() {
   return (
     <div className="login modal">
       <form onSubmit={handleSubmit} method="post">
-        <div className="email-input">
+        <div className="user-input">
           <label htmlFor="">username</label>
           <input
             type="text"
