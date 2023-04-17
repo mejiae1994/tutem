@@ -22,7 +22,7 @@ export default function SwipeList() {
       swipes += swipe[s].length;
     }
 
-    if (swipes > 1) {
+    if (swipes > 0) {
       console.log("swipe batching is done, need to send request");
       let status = postSwipe();
       if (status === 200) {
@@ -74,8 +74,6 @@ export default function SwipeList() {
     newArray[key] = Number(!newArray[key]);
     setFlipList(newArray);
   }
-
-  console.log(flipList);
 
   return (
     <div className="swipe-container">

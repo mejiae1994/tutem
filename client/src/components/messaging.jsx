@@ -98,7 +98,7 @@ export default function Message() {
             placeholder="Write a message..."
             onChange={handleChange}
           ></textarea>
-          <button type="submit">Send Message</button>
+          <button type="submit">Send</button>
         </form>
       </div>
       <ConversationList />

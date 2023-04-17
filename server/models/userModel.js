@@ -24,10 +24,10 @@ const userSchema = mongoose.Schema(
     rightSwipe: [{ type: mongoose.ObjectId, ref: "User" }],
     leftSwipe: [{ type: mongoose.ObjectId, ref: "User" }],
     userPreferences: {
-      interest: {
+      role: {
         type: String,
-        enum: ["teach", "learn"],
-        default: "learn",
+        enum: ["Educator", "Pupil"],
+        default: "Pupil",
       },
       preferredLanguage: {
         type: String,
@@ -42,6 +42,39 @@ const userSchema = mongoose.Schema(
         default:
           "https://static.vecteezy.com/system/resources/thumbnails/002/608/327/small/mobile-application-avatar-web-button-menu-digital-silhouette-style-icon-free-vector.jpg",
       },
+    },
+    interests: {
+      type: [
+        {
+          interest: {
+            type: String,
+            required: true,
+          },
+          enabled: {
+            type: Number,
+            required: true,
+            default: 0,
+          },
+        },
+      ],
+      default: [
+        {
+          interest: "Web Dev",
+          enabled: 0,
+        },
+        {
+          interest: "Game Developer",
+          enabled: 0,
+        },
+        {
+          interest: "Data Science",
+          enabled: 0,
+        },
+        {
+          interest: "Programming Math",
+          enabled: 0,
+        },
+      ],
     },
   },
   {

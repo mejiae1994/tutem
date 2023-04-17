@@ -130,8 +130,8 @@ const getFilteredUsers = asyncHandler(async (req, res) => {
   let swipesArray = Array.from(swipeSet);
   //filter users
   const users = await User.find({ _id: { $nin: swipesArray } })
-    .where("userPreferences.interest")
-    .ne(userPreferences.interest);
+    .where("userPreferences.role")
+    .ne(userPreferences.role);
 
   if (!users) {
     res.status(204);
@@ -145,15 +145,8 @@ const getFilteredUsers = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/:id
 // @access  Public
 const updateUser = asyncHandler(async (req, res) => {
-  let requestBody;
-  const { userPreferences } = req.body;
-
-  if (userPreferences) {
-    requestBody = flattenObject(req.body);
-  } else {
-    requestBody = req.body;
-  }
-
+  let requestBody = flattenObject(req.body);
+  console.log(requestBody);
   const updatedUser = await User.findByIdAndUpdate(
     req.params.id,
     {
@@ -208,6 +201,7 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+//flatten object properties user { userPreferences: { bio} } becomes userPreferences.bio
 function flattenObject(obj) {
   const result = {};
 

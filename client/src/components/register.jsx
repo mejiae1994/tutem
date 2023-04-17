@@ -27,6 +27,7 @@ export default function Register() {
 
   return (
     <div className="register modal">
+      <h2>Please fill out all the fields</h2>
       <form onSubmit={handleSubmit} method="post">
         <div className="user-input">
           <label htmlFor="">Username</label>
@@ -35,6 +36,7 @@ export default function Register() {
             name="username"
             id=""
             placeholder="Enter your username"
+            required
           />
         </div>
         <div className="email-input">
@@ -44,6 +46,7 @@ export default function Register() {
             name="email"
             id=""
             placeholder="Enter your email"
+            required
           />
         </div>
         <div className="password-input">
@@ -53,6 +56,7 @@ export default function Register() {
             name="password"
             id=""
             placeholder="Enter your password"
+            required
           />
         </div>
         <button type="submit">Register</button>

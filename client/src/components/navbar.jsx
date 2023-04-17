@@ -2,6 +2,9 @@ import { React, useContext, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
 import { axiosRequest } from "../utils/axiosRequest";
+import homeIcon from "../assets/home.png";
+import dashboardIcon from "../assets/dashboard.png";
+import logoutIcon from "../assets/log-out.png";
 
 export default function NavBar() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,9 +41,18 @@ export default function NavBar() {
               </div>
               {modalOpen && (
                 <div className="options">
-                  <Link to="/home">Home</Link>
-                  <Link to="/dashboard">Dashboard</Link>
-                  <Link onClick={handleLogout}>Logout</Link>
+                  <Link className="options-row" to="/home">
+                    <img src={homeIcon} alt="" />
+                    <span>Home</span>
+                  </Link>
+                  <Link className="options-row" to="/dashboard">
+                    <img src={dashboardIcon} alt="" />
+                    <span>Dashboard</span>
+                  </Link>
+                  <Link className="options-row" onClick={handleLogout}>
+                    <img src={logoutIcon} alt="" />
+                    <span>Logout</span>
+                  </Link>
                 </div>
               )}
             </div>

@@ -39,14 +39,16 @@ export default function Login() {
 
   return (
     <div className="login modal">
+      <h2>Enter your credentials to login</h2>
       <form onSubmit={handleSubmit} method="post">
         <div className="user-input">
-          <label htmlFor="">username</label>
+          <label htmlFor="">Username</label>
           <input
             type="text"
             name="username"
             id=""
             placeholder="Enter your username"
+            required
           />
         </div>
         <div className="password-input">
@@ -56,9 +58,10 @@ export default function Login() {
             name="password"
             id=""
             placeholder="Enter your password"
+            required
           />
         </div>
-        <button type="submit">Continue</button>
+        <button type="submit">Log in</button>
 
         <span
           style={{
