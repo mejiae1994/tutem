@@ -114,11 +114,32 @@ function Preferences() {
     }
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  function isValidForm() {
+    const { username, email, userPreferences, interests } = formData;
+    const { role, bio } = userPreferences;
+
+    if (
+      username.trim() === "" &&
+      email.trim() === "" &&
+      role.trim() === "" &&
+      bio.trim() === "" &&
+      interests.length === 0
+    ) {
+      alert("No preference changes have been made.");
+      return false;
+    }
 
     if (formData.email !== "" && !isValidEmail(formData.email)) {
       alert("Please enter a valid email address");
+      return false;
+    }
+    return true;
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!isValidForm()) {
       return;
     }
 
@@ -170,7 +191,6 @@ function Preferences() {
   }
 
   function isValidEmail(email) {
-    // regex pattern to validate email address format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
@@ -200,7 +220,7 @@ function Preferences() {
         </div>
         <div className="role-select">
           <label htmlFor="role">Role</label>
-          <select name="role" onChange={handleChange}>
+          <select name="role" defaultValue="Pupil" onChange={handleChange}>
             <option value="Pupil">Pupil</option>
             <option value="Educator">Educator</option>
           </select>

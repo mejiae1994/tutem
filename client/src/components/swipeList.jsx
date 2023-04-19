@@ -78,7 +78,7 @@ export default function SwipeList() {
   return (
     <div className="swipe-container">
       <h1>List of Available users</h1>
-      {userList &&
+      {userList.length !== 0 ? (
         userList.map((user, key) => {
           return (
             <div className="user-card" key={key}>
@@ -116,7 +116,18 @@ export default function SwipeList() {
               </div>
             </div>
           );
-        })}
+        })
+      ) : (
+        <div
+          style={{
+            color: "red",
+            fontSize: "3rem",
+            borderBottom: "1px solid var(--secondary-color)",
+          }}
+        >
+          No users to match with, need more users :|
+        </div>
+      )}
     </div>
   );
 }

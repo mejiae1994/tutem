@@ -1,4 +1,4 @@
-import { React, useContext, useState } from "react";
+import { React, useContext, useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserProvider";
 import { axiosRequest } from "../utils/axiosRequest";
@@ -20,11 +20,17 @@ export default function NavBar() {
       const response = await axiosRequest.post("users/logout");
       localStorage.setItem("user", null);
       setUser(null);
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, []);
 
   return (
     <>
