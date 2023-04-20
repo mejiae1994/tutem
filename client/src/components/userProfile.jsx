@@ -51,15 +51,17 @@ export default function UserProfile({ userData }) {
   return (
     <div className="dashboard-content">
       <div className="user-profile">
-        <input type="file" onChange={handleFile}></input>
-        <img
-          className="user-img"
-          src={userPreferences.profileImg}
-          alt="profile Image"
-        />
-        <h1 className="username">{details.username}</h1>
-        <h3 className="user-role">{userPreferences.role}</h3>
-        <p>{userPreferences?.bio ? userPreferences.bio : "no user bio"}</p>
+        <div className="user-profile-info">
+          <input type="file" onChange={handleFile}></input>
+          <img
+            className="user-img"
+            src={userPreferences.profileImg}
+            alt="profile Image"
+          />
+          <h1 className="username">{details.username}</h1>
+          <h3 className="user-role">{userPreferences.role}</h3>
+          <p>{userPreferences?.bio ? userPreferences.bio : "no user bio"}</p>
+        </div>
         <div className="current-interests">
           <h3>Current Interests highlighted</h3>
           <ul>
@@ -231,6 +233,7 @@ function Preferences() {
             name="bio"
             placeholder="modify your bio"
             onChange={handleChange}
+            maxLength="200"
           ></textarea>
         </div>
         <div className="user-interests">
