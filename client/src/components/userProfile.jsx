@@ -11,10 +11,11 @@ export default function UserProfile({ userData }) {
   const [popup, setPopup] = useState(false);
 
   function handleFile(e) {
-    uploadFile(e.target.files[0]);
+    console.log("entering handle file method");
+    uploadImgFile(e.target.files[0]);
   }
 
-  async function uploadFile(image) {
+  async function uploadImgFile(image) {
     const data = new FormData();
     data.append("file", image);
     data.append("upload_preset", "tutem2023");
@@ -54,19 +55,23 @@ export default function UserProfile({ userData }) {
       <div className="user-profile">
         <div className="user-profile-info">
           <div className="user-profile-main">
-            <input type="file" onChange={handleFile}></input>
             <img
               className="user-img"
               src={userPreferences.profileImg}
               alt="profile Image"
-              onMouseLeave={() => setPopup(!popup)}
-              onMouseEnter={() => setPopup(!popup)}
             />
             {popup && (
               <div className="user-profile-info-popup">
                 <span>Click to change profile picture</span>
               </div>
             )}
+            <input
+              type="file"
+              onChange={handleFile}
+              accept=".png, .jpg"
+              onMouseLeave={() => setPopup(!popup)}
+              onMouseEnter={() => setPopup(!popup)}
+            ></input>
           </div>
           <div className="user-profile-info-titles">
             <h1 className="username">{details.username}</h1>
