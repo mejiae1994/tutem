@@ -27,7 +27,7 @@ export default function Register() {
 
   return (
     <div className="register modal">
-      <h2>Please fill out all the fields</h2>
+      <h2>Sign Up</h2>
       <form onSubmit={handleSubmit} method="post">
         <div className="user-input">
           <label htmlFor="">Username</label>

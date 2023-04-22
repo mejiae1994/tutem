@@ -1,10 +1,12 @@
-import { React, useEffect, useState } from "react";
+import { React, useContext, useEffect, useState } from "react";
 import { axiosRequest } from "../utils/axiosRequest";
 import thumbupImg from "../assets/up-50.png";
 import thumbdownImg from "../assets/down-50.png";
 import ReactCardFlip from "react-card-flip";
+import { UserContext } from "../context/UserProvider";
 
 export default function SwipeList() {
+  const { user, setUser } = useContext(UserContext);
   const [userList, setUserList] = useState([]);
   const [swipe, setSwipe] = useState({
     rightSwipe: [],
@@ -77,7 +79,11 @@ export default function SwipeList() {
 
   return (
     <div className="swipe-container">
-      <h1>List of Available users</h1>
+      {user.userPreferences?.role === "Pupil" ? (
+        <h1>Educators</h1>
+      ) : (
+        <h1>Students</h1>
+      )}
       {userList.length !== 0 ? (
         userList.map((user, key) => {
           return (

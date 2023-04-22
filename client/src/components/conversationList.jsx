@@ -23,7 +23,7 @@ export default function ConversationList() {
 
   useEffect(() => {
     fetchMatches();
-  }, [user]);
+  }, [user, isMessagingOpen]);
 
   async function fetchMatches() {
     try {

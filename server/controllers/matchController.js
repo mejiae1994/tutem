@@ -30,7 +30,7 @@ const upsertMatches = asyncHandler(async (req, res) => {
   });
 
   const matches = await Match.bulkWrite(userBulkWriteArray);
-  console.log(matches);
+  console.log(new Date().toLocaleString(), matches);
 });
 
 //getMatches

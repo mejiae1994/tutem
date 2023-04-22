@@ -106,12 +106,6 @@ const getUser = asyncHandler(async (req, res) => {
 // @access  Public
 const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find();
-
-  if (!users) {
-    res.status(400);
-    throw new Error("no users found");
-  }
-
   res.status(200).json(users);
 });
 
@@ -119,12 +113,17 @@ const getUsers = asyncHandler(async (req, res) => {
 // @route   GET /api/users/filtered
 // @access  Public
 const getFilteredUsers = asyncHandler(async (req, res) => {
-  const { rightSwipe, leftSwipe, userPreferences } = await User.findById(
-    req.user.id
-  ).select("rightSwipe leftSwipe userPreferences");
+  const userSwipes = await User.findById(req.user.id).select(
+    "rightSwipe leftSwipe userPreferences"
+  );
 
-  const joinedSwipes = [...rightSwipe, ...leftSwipe, req.user.id];
-  let swipeSet = new Set(joinedSwipes);
+  if (!userSwipes) {
+    res.status(200).json([]);
+    return;
+  }
+
+  const { rightSwipe, leftSwipe, userPreferences } = userSwipes;
+  let swipeSet = new Set([...rightSwipe, ...leftSwipe, req.user.id]);
 
   //convert back to array to use as filter
   let swipesArray = Array.from(swipeSet);
@@ -132,11 +131,6 @@ const getFilteredUsers = asyncHandler(async (req, res) => {
   const users = await User.find({ _id: { $nin: swipesArray } })
     .where("userPreferences.role")
     .ne(userPreferences.role);
-
-  if (!users) {
-    res.status(204);
-    throw new Error("no users found at this time");
-  }
 
   res.status(200).json(users);
 });

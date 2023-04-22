@@ -24,11 +24,12 @@ app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/matches", require("./routes/matchRoutes"));
 app.use("/api/messages", require("./routes/messageRoutes"));
 
-app.use(errorHandler);
-
 //jobs
 let task = cron.schedule("*/1 * * * *", upsertMatches);
 task.start();
+
+//error handling
+app.use(errorHandler);
 
 //start server
 app.listen(port, () => {
