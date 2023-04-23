@@ -1,9 +1,12 @@
 const asyncHandler = require("express-async-handler");
 const Match = require("../models/matchModel");
 const User = require("../models/userModel");
+const Message = require("../models/messageModel");
+const { performance } = require("perf_hooks");
 
 const upsertMatches = asyncHandler(async (req, res) => {
   //grab all users Id and rightswipe
+  const start = performance.now();
   const users = await User.find({}, "_id rightSwipe");
 
   if (!users) {
@@ -15,7 +18,6 @@ const upsertMatches = asyncHandler(async (req, res) => {
     console.log("no matches at this time");
     return;
   }
-  // console.log("logging the matches found", matches);
 
   const flattenedMatches = createUserMatchMap(userMatches);
 
@@ -30,7 +32,8 @@ const upsertMatches = asyncHandler(async (req, res) => {
   });
 
   const matches = await Match.bulkWrite(userBulkWriteArray);
-  console.log(new Date().toLocaleString(), matches);
+  const end = performance.now();
+  console.log(`Execution time for api/matches ${end - start} ms`);
 });
 
 //getMatches
@@ -46,18 +49,46 @@ const getMatches = asyncHandler(async (req, res) => {
 
 //getMatch
 const getMatch = asyncHandler(async (req, res) => {
+  //find current user matches
+  const start = performance.now();
   const match = await Match.find({ userId: req.params.id });
 
   if (match.length < 1) {
-    console.log("no matches found for this user");
-    res.status(204).json("no matches found at this time");
+    res.status(200).json([]);
     return;
   }
 
+  //get users data using user Ids from the match collection
   const [matchObj] = match;
-  const users = await User.find({ _id: { $in: matchObj.matches } });
+  const users = await User.find({ _id: { $in: matchObj.matches } }).lean();
 
-  res.status(200).json(users);
+  //get the last message fo each user and append it
+  let usersWithLastMessage = await Promise.all(
+    users.map(async (user, index) => {
+      try {
+        let messageId = Array.from(user._id + req.params.id)
+          .sort()
+          .join("");
+
+        let singleMessage = await Message.findOne({ id: messageId }).sort({
+          updatedAt: -1,
+        });
+
+        let modifiedUser = {
+          ...user,
+          lastMessage: singleMessage,
+        };
+
+        return modifiedUser;
+      } catch (error) {
+        console.log(error);
+      }
+    })
+  );
+
+  const end = performance.now();
+  console.log(`Execution time for api/matches/:id ${end - start} ms`);
+  res.status(200).json(usersWithLastMessage);
 });
 
 function findPotentialMatch(userCollection) {

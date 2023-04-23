@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const jtw = require("jsonwebtoken");
+const { performance } = require("perf_hooks");
 
 // @desc    Register new user
 // @route   POST /api/users/register
@@ -46,6 +47,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users/login
 // @access  Public
 const loginUser = asyncHandler(async (req, res) => {
+  const start = performance.now();
   const { username } = req.body;
 
   const user = await User.findOne({ username });
@@ -72,12 +74,15 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const { password, ...data } = user._doc;
   res.cookie("access_token", token, { httpOnly: true }).status(200).json(data);
+  const end = performance.now();
+  console.log(`Execution time for api/users/login ${end - start} ms`);
 });
 
 // @desc    logout user
 // @route   POST /api/users/logout
 // @access  Public
 const logoutUser = asyncHandler(async (req, res) => {
+  const start = performance.now();
   res
     .clearCookie("access_token", {
       sameSite: "none",
@@ -85,6 +90,8 @@ const logoutUser = asyncHandler(async (req, res) => {
     })
     .status(200)
     .send("User has been logged out.");
+  const end = performance.now();
+  console.log(`Execution time for api/users/logout ${end - start} ms`);
 });
 
 // @desc    get user
@@ -113,6 +120,7 @@ const getUsers = asyncHandler(async (req, res) => {
 // @route   GET /api/users/filtered
 // @access  Public
 const getFilteredUsers = asyncHandler(async (req, res) => {
+  const start = performance.now();
   const userSwipes = await User.findById(req.user.id).select(
     "rightSwipe leftSwipe userPreferences"
   );
@@ -133,12 +141,15 @@ const getFilteredUsers = asyncHandler(async (req, res) => {
     .ne(userPreferences.role);
 
   res.status(200).json(users);
+  const end = performance.now();
+  console.log(`Execution time for get api/users/filtered ${end - start} ms`);
 });
 
 // @desc    update user
 // @route   PUT /api/users/:id
 // @access  Public
 const updateUser = asyncHandler(async (req, res) => {
+  const start = performance.now();
   let requestBody = flattenObject(req.body);
   console.log(requestBody);
   const updatedUser = await User.findByIdAndUpdate(
@@ -157,6 +168,8 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json(updatedUser);
+  const end = performance.now();
+  console.log(`Execution time for put api/users/:id ${end - start} ms`);
 });
 
 // @desc    update userSwipe

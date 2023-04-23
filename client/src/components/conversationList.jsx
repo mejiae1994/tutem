@@ -23,10 +23,11 @@ export default function ConversationList() {
 
   useEffect(() => {
     fetchMatches();
-  }, [user, isMessagingOpen]);
+  }, [isMessagingOpen]);
 
   async function fetchMatches() {
     try {
+      console.log("fetching conversation list");
       const { data } = await axiosRequest.get(`matches/${user._id}`);
       setConversationList(data);
     } catch (error) {
@@ -54,7 +55,12 @@ export default function ConversationList() {
                   ref={messageRef}
                 >
                   <img src={item.userPreferences.profileImg} alt="match icon" />
-                  <span>{item.email}: </span>
+                  <div className="message-preview">
+                    <span
+                      style={{ fontWeight: "700" }}
+                    >{`${item.username}:`}</span>
+                    <span> {item.lastMessage?.content}</span>
+                  </div>
                 </div>
               </Link>
             );
