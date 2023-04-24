@@ -26,7 +26,6 @@ export default function UserProfile({ userData }) {
       );
 
       const { url } = uploadRes.data;
-
       const postUrl = {
         userPreferences: {
           profileImg: url,

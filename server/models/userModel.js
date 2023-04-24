@@ -76,6 +76,7 @@ const userSchema = mongoose.Schema(
         },
       ],
     },
+    oldImages: [{ type: String }],
   },
   {
     timestamps: true,

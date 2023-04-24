@@ -151,7 +151,30 @@ const getFilteredUsers = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   const start = performance.now();
   let requestBody = flattenObject(req.body);
-  console.log(requestBody);
+
+  if (checkObjectProp("userPreferences.profileImg", requestBody)) {
+    const currentUserImg = await User.findById(req.params.id).select(
+      "userPreferences.profileImg"
+    );
+
+    const publicImgId = extractPublicId(
+      currentUserImg["userPreferences"].profileImg
+    );
+
+    //push imgId into the user collection array property
+    await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          oldImages: publicImgId,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+  }
+
   const updatedUser = await User.findByIdAndUpdate(
     req.params.id,
     {
@@ -232,6 +255,15 @@ function flattenObject(obj) {
   recurse(obj, "");
 
   return result;
+}
+//check if object contains property and its not empty
+function checkObjectProp(property, obj) {
+  return property in obj && obj[property].length > 0 ? true : false;
+}
+
+function extractPublicId(imgUrl) {
+  const index = imgUrl.lastIndexOf("/") + 1;
+  return imgUrl.substring(index, imgUrl.lastIndexOf("."));
 }
 
 module.exports = {
